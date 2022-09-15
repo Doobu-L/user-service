@@ -20,6 +20,6 @@ public class UserEntity {
     private String name;
     @Column(nullable = false,length = 50,unique = true)
     private String userId;
-    @Column(nullable = false,length = 50,unique = true)
+    @Column(nullable = false)
     private String encryptedPwd;
 }

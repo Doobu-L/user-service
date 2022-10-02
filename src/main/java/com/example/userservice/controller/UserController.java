@@ -6,9 +6,9 @@ import com.example.userservice.service.UserService;
 import com.example.userservice.vo.Greeting;
 import com.example.userservice.vo.RequestUser;
 import com.example.userservice.vo.ResponseUser;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,19 +18,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user-service")
+@RequestMapping("/")
+@RequiredArgsConstructor
 public class UserController {
 
-    private Environment env;
-    private UserService userService;
-
-    @Autowired
-    private Greeting greeting;
-
-    public UserController(Environment env,UserService userService) {
-        this.env = env;
-        this.userService = userService;
-    }
+    private final Environment env;
+    private final UserService userService;
+    private final Greeting greeting;
 
     @GetMapping("/health_check")
     public String status(){

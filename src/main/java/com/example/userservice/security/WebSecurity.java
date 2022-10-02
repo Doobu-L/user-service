@@ -1,10 +1,8 @@
 package com.example.userservice.security;
 
 import com.example.userservice.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,33 +11,20 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private UserService userService;
-    private BCryptPasswordEncoder passwordEncoder;
-    private Environment env;
-
-    @Autowired
-    public WebSecurity(Environment env,UserService userService, BCryptPasswordEncoder passwordEncoder) {
-        this.env = env;
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-    public WebSecurity(boolean disableDefaults, UserService userService, BCryptPasswordEncoder passwordEncoder) {
-        super(disableDefaults);
-        this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private final UserService userService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         //http.authorizeHttpRequests().antMatchers("/users/**").permitAll();
         http.authorizeRequests().antMatchers("/**")
-                .hasIpAddress("192.168.0.19")
+                .hasIpAddress("192.168.0.8")
                 .and()
-                .addFilter(getAuthenticationFilter());
+         .addFilter(getAuthenticationFilter());
 
         http.headers().frameOptions().disable();
     }
@@ -52,13 +37,9 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userService).passwordEncoder(bCryptPasswordEncoder);
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
 
 
 }

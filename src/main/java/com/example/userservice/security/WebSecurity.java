@@ -19,11 +19,10 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        String userIp="192.168.0.8";
         http.csrf().disable();
         //http.authorizeHttpRequests().antMatchers("/users/**").permitAll();
-        http.authorizeRequests().antMatchers("/**")
-                .hasIpAddress("192.168.0.8")
-                .and()
+        http.authorizeRequests().antMatchers("/**").permitAll().and()
          .addFilter(getAuthenticationFilter());
 
         http.headers().frameOptions().disable();
